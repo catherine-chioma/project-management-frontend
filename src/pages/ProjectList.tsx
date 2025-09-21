@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, Link } from "react-router-dom";
-import api from "../services/api";
+import axios from "axios";
 import type { Project } from "../types/project";
+
+// Use backend URL from .env
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
 
 export default function ProjectsList() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -11,6 +16,7 @@ export default function ProjectsList() {
   const navigate = useNavigate();
   const message = (location.state as { message?: string })?.message;
 
+  // Fetch all projects
   const fetchProjects = async () => {
     try {
       const response = await api.get<Project[]>("/projects");
@@ -26,6 +32,7 @@ export default function ProjectsList() {
     fetchProjects();
   }, []);
 
+  // Delete a project
   const handleDelete = async (id: number) => {
     if (!window.confirm("Are you sure you want to delete this project?"))
       return;

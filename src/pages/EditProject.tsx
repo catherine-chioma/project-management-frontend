@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import api from "../services/api";
+import axios from "axios";
 import type { Project } from "../types/project";
+
+// Axios instance pointing to backend URL from .env
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
 
 export default function EditProject() {
   const { id } = useParams<{ id: string }>();
@@ -14,13 +19,13 @@ export default function EditProject() {
       try {
         const response = await api.get<Project>(`/projects/${id}`);
         setProject(response.data);
-      } catch {
-        alert("Failed to fetch project");
+      } catch (err: any) {
+        alert(err.message || "Failed to fetch project");
       } finally {
         setLoading(false);
       }
     };
-    fetchProject();
+    if (id) fetchProject();
   }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,8 +36,8 @@ export default function EditProject() {
         description: project?.description,
       });
       navigate("/", { state: { message: "✏️ Project updated successfully!" } });
-    } catch {
-      alert("Failed to update project");
+    } catch (err: any) {
+      alert(err.message || "Failed to update project");
     }
   };
 

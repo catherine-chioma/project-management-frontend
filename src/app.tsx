@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import ProjectsList from "./pages/ProjectList";
 import CreateProject from "./pages/CreateProject";
-import EditProject from "./pages/EditProject"; // 👈 import the edit page
+import EditProject from "./pages/EditProject";
 
 export default function App() {
   return (
@@ -15,8 +15,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<ProjectsList />} />
           <Route path="/create" element={<CreateProject />} />
-          <Route path="/edit/:id" element={<EditProject />} />{" "}
-          {/* 👈 add this */}
+          <Route path="/projects/:id/edit" element={<EditProject />} />
+          {/* ✅ Matches links like /projects/1/edit */}
         </Routes>
       </div>
     </BrowserRouter>

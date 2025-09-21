@@ -1,6 +1,11 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import api from "../services/api";
+import axios from "axios";
+
+// Axios instance pointing to backend URL from .env
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
 
 export default function CreateProject() {
   const [name, setName] = useState("");

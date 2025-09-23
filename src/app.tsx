@@ -1,24 +1,20 @@
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+// src/App.tsx
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import ProjectsList from "./pages/ProjectList";
-import CreateProject from "./pages/CreateProject";
-import EditProject from "./pages/EditProject";
+import ProjectDetails from "./pages/ProjectDetail";
 
-export default function App() {
+function App() {
   return (
-    <BrowserRouter>
-      <nav className="p-4 bg-gray-200 flex gap-4">
-        <Link to="/">Projects</Link>
-        <Link to="/create">Create Project</Link>
-      </nav>
+    <Router>
+      <Routes>
+        {/* Project List Page */}
+        <Route path="/" element={<ProjectsList />} />
 
-      <div className="p-4">
-        <Routes>
-          <Route path="/" element={<ProjectsList />} />
-          <Route path="/create" element={<CreateProject />} />
-          <Route path="/projects/:id/edit" element={<EditProject />} />
-          {/* ✅ Matches links like /projects/1/edit */}
-        </Routes>
-      </div>
-    </BrowserRouter>
+        {/* Project Details Page */}
+        <Route path="/projects/:id" element={<ProjectDetails />} />
+      </Routes>
+    </Router>
   );
 }
+
+export default App;

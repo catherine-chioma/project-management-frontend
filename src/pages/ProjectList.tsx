@@ -18,7 +18,7 @@ export default function ProjectsList() {
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const res = await api.get<Project[]>("/projects");
+      const res = await api.get<Project[]>("/api/projects");
       setProjects(res.data);
     } catch (err: any) {
       setError(err.message || "Failed to fetch projects");
@@ -36,7 +36,7 @@ export default function ProjectsList() {
     if (!window.confirm("Are you sure you want to delete this project?"))
       return;
     try {
-      await api.delete(`/projects/${id}`);
+      await api.delete(`/api/projects/${id}`);
       fetchProjects();
     } catch {
       alert("Failed to delete project");
@@ -50,11 +50,11 @@ export default function ProjectsList() {
     try {
       if (editingProject) {
         // UPDATE
-        await api.put(`/projects/${editingProject.id}`, data);
+        await api.put(`/api/projects/${editingProject.id}`, data);
         setEditingProject(null);
       } else {
         // CREATE
-        await api.post("/projects", data);
+        await api.post("/api/projects", data);
       }
       setShowForm(false);
       fetchProjects();

@@ -1,30 +1,35 @@
+// src/pages/ProjectCreate.tsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../services/api"; // ✅ use the shared axios instance
 
-// Axios instance pointing to backend URL from .env
-const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-});
-
-export default function CreateProject() {
+export default function ProjectCreate() {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
+
     try {
       await api.post("/projects", { name, description });
       navigate("/", { state: { message: "✅ Project created successfully!" } });
     } catch (err: any) {
-      alert(err.message || "Failed to create project");
+      setError(err.message || "❌ Failed to create project");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="container mt-4">
       <h1 className="mb-4">Create Project</h1>
+
+      {error && <div className="alert alert-danger">{error}</div>}
 
       <form onSubmit={handleSubmit}>
         <div className="mb-3">
@@ -36,6 +41,7 @@ export default function CreateProject() {
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
@@ -48,13 +54,15 @@ export default function CreateProject() {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             required
+            disabled={loading}
           />
         </div>
 
-        <button type="submit" className="btn btn-primary">
-          Create
+        <button type="submit" className="btn btn-primary" disabled={loading}>
+          {loading ? "Creating..." : "Create Project"}
         </button>
       </form>
     </div>
   );
 }
+

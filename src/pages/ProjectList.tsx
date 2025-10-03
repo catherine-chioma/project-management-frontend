@@ -18,7 +18,7 @@ export default function ProjectsList() {
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const res = await api.get<Project[]>("/api/projects");
+      const res = await api.get<Project[]>("/projects"); // ✅ fixed
       setProjects(res.data);
     } catch (err: any) {
       setError(err.message || "Failed to fetch projects");
@@ -33,10 +33,9 @@ export default function ProjectsList() {
 
   // ✅ DELETE project
   const handleDelete = async (id: number) => {
-    if (!window.confirm("Are you sure you want to delete this project?"))
-      return;
+    if (!window.confirm("Are you sure you want to delete this project?")) return;
     try {
-      await api.delete(`/api/projects/${id}`);
+      await api.delete(`/projects/${id}`); // ✅ fixed
       fetchProjects();
     } catch {
       alert("Failed to delete project");
@@ -50,11 +49,11 @@ export default function ProjectsList() {
     try {
       if (editingProject) {
         // UPDATE
-        await api.put(`/api/projects/${editingProject.id}`, data);
+        await api.put(`/projects/${editingProject.id}`, data); // ✅ fixed
         setEditingProject(null);
       } else {
         // CREATE
-        await api.post("/api/projects", data);
+        await api.post("/projects", data); // ✅ fixed
       }
       setShowForm(false);
       fetchProjects();
@@ -103,21 +102,17 @@ export default function ProjectsList() {
             <div className="col-md-4 mb-4" key={project.id}>
               <div className="card shadow-sm border-0 h-100">
                 <div className="card-body d-flex flex-column">
-                  {/* Title */}
                   <h5 className="card-title text-primary fw-bold">
                     {project.name}
                   </h5>
 
-                  {/* Description */}
                   <p className="text-muted">{project.description}</p>
 
-                  {/* Budget */}
                   <p className="mb-1">
                     <span className="fw-semibold">Budget:</span>{" "}
                     <span className="text-success">₦{project.budget}</span>
                   </p>
 
-                  {/* Dates */}
                   <p className="mb-1">
                     <strong>Start:</strong>{" "}
                     {new Date(project.startDate).toLocaleDateString()}
@@ -127,10 +122,9 @@ export default function ProjectsList() {
                     {new Date(project.endDate).toLocaleDateString()}
                   </p>
 
-                  {/* Action Buttons */}
                   <div className="mt-auto d-flex justify-content-between gap-2">
                     <Link
-                      to={`/projects/${project.id}`} // ✅ route to ProjectDetails
+                      to={`/projects/${project.id}`}
                       className="btn btn-sm btn-outline-secondary"
                     >
                       View More

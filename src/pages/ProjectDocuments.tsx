@@ -17,7 +17,7 @@ export default function ProjectDocuments() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch project documents
+  // ✅ Fetch project documents
   const fetchDocuments = async () => {
     if (!id) return;
     setLoading(true);
@@ -71,3 +71,4 @@ export default function ProjectDocuments() {
     </div>
   );
 }
+

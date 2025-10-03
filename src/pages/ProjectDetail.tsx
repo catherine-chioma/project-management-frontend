@@ -11,11 +11,12 @@ export default function ProjectDetail() {
   const [error, setError] = useState<string | null>(null);
   const [editing, setEditing] = useState(false);
 
+  // ✅ Fetch project by ID
   useEffect(() => {
     const fetchProject = async () => {
       try {
         if (!id) return;
-        const res = await api.get<Project>(`/projects/${id}`);
+        const res = await api.get<Project>(`/api/projects/${id}`);
         setProject(res.data);
       } catch (err: any) {
         setError(err.message || "Failed to fetch project");
@@ -26,16 +27,18 @@ export default function ProjectDetail() {
     fetchProject();
   }, [id]);
 
+  // ✅ Update project
   const handleUpdate = async (
     data: Omit<Project, "id" | "createdAt" | "updatedAt">
   ) => {
     if (!project) return;
     try {
-      await api.put(`/projects/${project.id}`, data);
+      await api.put(`/api/projects/${project.id}`, data);
       alert("Project updated successfully!");
       setEditing(false);
+
       // reload project
-      const res = await api.get<Project>(`/projects/${project.id}`);
+      const res = await api.get<Project>(`/api/projects/${project.id}`);
       setProject(res.data);
     } catch (err: any) {
       alert(err.message || "Failed to update project");
@@ -111,3 +114,4 @@ export default function ProjectDetail() {
     </div>
   );
 }
+

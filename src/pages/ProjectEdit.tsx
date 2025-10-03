@@ -1,3 +1,4 @@
+// src/pages/ProjectEdit.tsx
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import ProjectForm from "../components/ProjectForm";
@@ -5,10 +6,11 @@ import type { Project } from "../types/project";
 import api from "../services/api";
 
 export default function ProjectEdit() {
-  const { id } = useParams();
+  const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [project, setProject] = useState<Project | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchProject = async () => {
@@ -16,8 +18,8 @@ export default function ProjectEdit() {
       try {
         const res = await api.get<Project>(`/projects/${id}`);
         setProject(res.data);
-      } catch {
-        alert("Failed to fetch project");
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch project");
       } finally {
         setLoading(false);
       }
@@ -26,17 +28,18 @@ export default function ProjectEdit() {
   }, [id]);
 
   if (loading) return <p>Loading...</p>;
-  if (!project) return <p>Project not found</p>;
+  if (error) return <div className="alert alert-danger">{error}</div>;
+  if (!project) return <div className="alert alert-warning">Project not found</div>;
 
   const handleSubmit = async (
     data: Omit<Project, "id" | "createdAt" | "updatedAt">
   ) => {
     try {
       await api.put(`/projects/${id}`, data);
-      alert("Project updated successfully!");
-      navigate(`/projects/${id}`);
-    } catch {
-      alert("Failed to update project");
+      alert("✅ Project updated successfully!");
+      navigate(`/projects/${id}`); // Redirect back to project details
+    } catch (err: any) {
+      alert(err.message || "❌ Failed to update project");
     }
   };
 
@@ -51,3 +54,4 @@ export default function ProjectEdit() {
     </div>
   );
 }
+
